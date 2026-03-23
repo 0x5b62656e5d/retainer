@@ -1,18 +1,14 @@
-use crate::{Data, config::ENV};
+use crate::Data;
 use entity::{channels, messages};
 use sea_orm::{ActiveModelTrait, ActiveValue::Set, DbErr, EntityTrait};
-use serenity::all::{Context as SerenityContext, Message, ReactionType};
+use serenity::all::{Context as SerenityContext, GuildChannel, Message, ReactionType};
 
 pub async fn message_send(
     ctx: &SerenityContext,
     new_message: &Message,
     data: &Data,
 ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    if new_message.author.bot {
-        return Ok(());
-    }
-
-    let channel_id = match new_message.channel(ctx.http.clone()).await?.guild() {
+    let channel_id: GuildChannel = match new_message.channel(ctx.http.clone()).await?.guild() {
         Some(ch) => ch,
         None => return Ok(()),
     };
@@ -22,12 +18,16 @@ pub async fn message_send(
             .one(&data.postgres.connection())
             .await;
 
+    let expiry_days: i64 = *data.expiry_days.read().await;
+
     match id {
         Ok(Some(channel)) => {
             let new_message_model: messages::ActiveModel = messages::ActiveModel {
                 message_id: Set(new_message.id.get().to_string()),
                 channel_id: Set(channel.channel_id),
-                expires_at: Set((chrono::Utc::now() + chrono::Duration::days(ENV.bot.expiry_days as i64)).naive_utc()),
+                expires_at: Set(
+                    (chrono::Utc::now() + chrono::Duration::days(expiry_days)).naive_utc(),
+                ),
             };
 
             ctx.http

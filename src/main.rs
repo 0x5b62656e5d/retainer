@@ -7,6 +7,7 @@ use serenity::{
     all::{Context as SerenityContext, FullEvent, GatewayIntents},
 };
 use std::sync::Arc;
+use tokio::sync::RwLock;
 use tracing::level_filters::LevelFilter;
 use tracing_subscriber::EnvFilter;
 
@@ -80,6 +81,8 @@ async fn main() -> anyhow::Result<()> {
                 retainer::commands::channels::add(),
                 retainer::commands::channels::remove(),
                 retainer::commands::channels::list(),
+                retainer::commands::duration::duration(),
+                retainer::commands::duration::set(),
             ],
             event_handler: |ctx, event, framework, data| {
                 Box::pin(handle_event(ctx, event, framework, data))
@@ -97,6 +100,7 @@ async fn main() -> anyhow::Result<()> {
                     let data = Arc::new(Data {
                         postgres,
                         serenity_ctx: Arc::new(ctx.clone()),
+                        expiry_days: Arc::new(RwLock::new(ENV.bot.expiry_days)),
                     });
 
                     Ok(Arc::try_unwrap(data).unwrap_or_else(|arc| (*arc).clone()))
