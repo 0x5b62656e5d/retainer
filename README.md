@@ -1,6 +1,6 @@
 # Retainer
 
-A Github bot written in Rust that deletes messages older than the configured amount of days (no older than 14 days).
+A Discord bot written in Rust that deletes messages older than the configured amount of days (no older than 14 days).
 
 ## Commands
 
