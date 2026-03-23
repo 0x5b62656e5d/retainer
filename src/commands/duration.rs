@@ -4,7 +4,7 @@ use crate::{Context, Error};
     slash_command,
     prefix_command,
     subcommands("set", "get"),
-    description_localized("en-US", "Gets the duration of message retention")
+    description_localized("en-US", "Manages the duration of message retention")
 )]
 pub async fn duration(_ctx: Context<'_>) -> Result<(), Error> {
     Ok(())
@@ -13,7 +13,6 @@ pub async fn duration(_ctx: Context<'_>) -> Result<(), Error> {
 #[poise::command(
     slash_command,
     prefix_command,
-    subcommands("set"),
     description_localized("en-US", "Gets the duration of message retention")
 )]
 pub async fn get(ctx: Context<'_>) -> Result<(), Error> {
