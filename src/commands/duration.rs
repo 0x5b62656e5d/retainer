@@ -3,10 +3,20 @@ use crate::{Context, Error};
 #[poise::command(
     slash_command,
     prefix_command,
+    subcommands("set", "get"),
+    description_localized("en-US", "Gets the duration of message retention")
+)]
+pub async fn duration(_ctx: Context<'_>) -> Result<(), Error> {
+    Ok(())
+}
+
+#[poise::command(
+    slash_command,
+    prefix_command,
     subcommands("set"),
     description_localized("en-US", "Gets the duration of message retention")
 )]
-pub async fn duration(ctx: Context<'_>) -> Result<(), Error> {
+pub async fn get(ctx: Context<'_>) -> Result<(), Error> {
     let current_duration = *ctx.data().expiry_days.read().await;
 
     let response = format!(

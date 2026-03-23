@@ -82,6 +82,7 @@ async fn main() -> anyhow::Result<()> {
                 retainer::commands::channels::remove(),
                 retainer::commands::channels::list(),
                 retainer::commands::duration::duration(),
+                retainer::commands::duration::get(),
                 retainer::commands::duration::set(),
             ],
             event_handler: |ctx, event, framework, data| {
