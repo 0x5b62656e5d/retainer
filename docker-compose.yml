@@ -8,6 +8,8 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres_data:/var/lib/postgresql
+    ports:
+      - "5437:5432"
   retainer:
     build:
       context: .
