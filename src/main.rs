@@ -84,6 +84,7 @@ async fn main() -> anyhow::Result<()> {
                 retainer::commands::duration::duration(),
                 retainer::commands::duration::get(),
                 retainer::commands::duration::set(),
+                retainer::commands::cleanup::cleanup()
             ],
             event_handler: |ctx, event, framework, data| {
                 Box::pin(handle_event(ctx, event, framework, data))
